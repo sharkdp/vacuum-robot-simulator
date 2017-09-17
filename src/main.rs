@@ -10,14 +10,17 @@ use piston_window::PistonWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
 use graphics::Transformed;
 
+pub mod controller;
 pub mod geometry;
+pub mod math;
 pub mod pointcloud;
 pub mod render;
 pub mod simulation;
-pub mod math;
 
 use math::Scalar;
 use geometry::{Vector, Line, Pose};
+use pointcloud::PointCloud;
+use controller::Controller;
 use simulation::robot::Robot;
 use simulation::sensor::laserscanner::LaserScanner;
 
@@ -27,6 +30,8 @@ struct App {
     gl: GlGraphics,
     render_config: RenderConfig,
     robot: Robot,
+    pointcloud: PointCloud,
+    controller: Controller,
     objects: Vec<Line>
 }
 
@@ -68,16 +73,13 @@ impl App {
                             gl)
         });
 
-        // TODO: this is just for testing
-        let pointcloud = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
-
         let point = Ellipse {
             color: graphics::color::hex("1a1a1a"),
             border: None,
             resolution: 32
         };
         let point_radius = 0.25 * render_config.scale;
-        for &p in pointcloud.iter() {
+        for &p in self.pointcloud.iter() {
             let (px, py) = self.render_config.pixel_coords(p.pos);
             self.gl.draw(args.viewport(), |c, gl| {
                 point.draw([0.0, 0.0, point_radius, point_radius],
@@ -89,6 +91,14 @@ impl App {
     }
 
     fn update(&mut self, _: &UpdateArgs) {
+        // Perform a laser scan
+        self.pointcloud = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
+
+        // Run the perception algorithm
+        self.controller.cycle(&self.pointcloud);
+
+        // Move the robot (TODO)
+        self.robot.pose.position.y += 0.001;
     }
 }
 
@@ -117,12 +127,14 @@ fn main() {
         render_config: RenderConfig {
             scale: 30.0
         },
+        pointcloud: PointCloud::empty(),
         robot: Robot {
             pose: Pose::new(vec(1, 1), 0.0),
             laser_scanner: LaserScanner {
                 num_columns: 100
             }
         },
+        controller: Controller::new(),
         objects: vec!()
     };
 
@@ -134,6 +146,11 @@ fn main() {
     app.objects.push(Line::new(vec(-10, 2), vec(-10, -12)));
     app.objects.push(Line::new(vec(-10, -12), vec(0, -12)));
     app.objects.push(Line::new(vec(0, -12), vec(0, 0)));
+
+    app.objects.push(Line::new(vec(4, 4), vec(5, 4)));
+    app.objects.push(Line::new(vec(5, 4), vec(5, 5)));
+    app.objects.push(Line::new(vec(5, 5), vec(4, 5)));
+    app.objects.push(Line::new(vec(4, 5), vec(4, 4)));
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
