@@ -2,7 +2,7 @@ use std::fmt;
 use std::ops;
 use std::cmp;
 
-pub type Scalar = f64;
+use types::Scalar;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector {

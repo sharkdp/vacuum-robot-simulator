@@ -15,7 +15,7 @@ pub struct RendererConfig {
 
 impl RendererConfig {
     pub fn pixel_coords(&self, vec: geometry::vector::Vector) -> (f64, f64) {
-        (self.scale * vec.x, -self.scale * vec.y)
+        (self.scale * (vec.x as f64), -self.scale * (vec.y as f64))
     }
 }
 

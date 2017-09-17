@@ -1,7 +1,8 @@
 use std::fmt;
 use std::cmp;
 
-use super::vector::{Scalar, Vector};
+use types::Scalar;
+use super::vector::Vector;
 
 #[derive(Debug, Clone)]
 pub struct Point {

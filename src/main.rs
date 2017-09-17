@@ -10,10 +10,12 @@ use glutin_window::GlutinWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
 use graphics::Transformed;
 
+pub mod types;
 pub mod geometry;
 pub mod pointcloud;
 pub mod renderer;
 
+use types::Scalar;
 use geometry::vector::Vector;
 use geometry::line::Line;
 
@@ -74,7 +76,7 @@ fn main() {
     };
 
     // Little helper to construct vectors
-    let vec = |x, y| Vector::new(x as f64, y as f64);
+    let vec = |x, y| Vector::new(x as Scalar, y as Scalar);
 
     let line1 = Line::new(vec(0, 0), vec(10, 0));
     let line2 = Line::new(vec(10, 0), vec(10, 10));
