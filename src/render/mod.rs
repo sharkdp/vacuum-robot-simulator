@@ -9,11 +9,11 @@ use graphics::DrawState;
 
 use geometry;
 
-pub struct RendererConfig {
+pub struct RenderConfig {
     pub scale: f64
 }
 
-impl RendererConfig {
+impl RenderConfig {
     pub fn pixel_coords(&self, vec: geometry::Vector) -> (f64, f64) {
         (self.scale * (vec.x as f64), -self.scale * (vec.y as f64))
     }
@@ -23,13 +23,13 @@ const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
 pub trait Draw {
     fn draw(&self,
-            config: &RendererConfig,
+            config: &RenderConfig,
             transform: Matrix2d,
             gl: &mut GlGraphics);
 }
 
 impl Draw for geometry::Line {
-    fn draw(&self, config: &RendererConfig, transform: Matrix2d, gl: &mut GlGraphics) {
+    fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics) {
         let line = Line::new(WHITE, 1.0);
 
         let (x1, y1) = config.pixel_coords(self.start);

@@ -12,7 +12,7 @@ use graphics::Transformed;
 
 pub mod geometry;
 pub mod pointcloud;
-pub mod renderer;
+pub mod render;
 pub mod simulation;
 pub mod math;
 
@@ -21,11 +21,11 @@ use geometry::{Vector, Line, Pose};
 use simulation::robot::Robot;
 use simulation::sensor::laserscanner::LaserScanner;
 
-use renderer::{RendererConfig, Draw};
+use render::{RenderConfig, Draw};
 
 struct App {
     gl: GlGraphics,
-    config: RendererConfig,
+    render_config: RenderConfig,
     robot: Robot,
     objects: Vec<Line>
 }
@@ -41,13 +41,13 @@ impl App {
         // Clear screen
         graphics::clear(COLOR_BG, &mut self.gl);
 
-        let config = &self.config;
+        let render_config = &self.render_config;
 
         // Draw all static objects
         for ref o in &self.objects {
             self.gl.draw(args.viewport(), |c, gl| {
                 let transform = c.transform.trans(x, y);
-                o.draw(config, transform, gl);
+                o.draw(render_config, transform, gl);
             });
         }
 
@@ -59,8 +59,8 @@ impl App {
             resolution: 64
         };
 
-        let robot_radius = config.scale;
-        let (px, py) = self.config.pixel_coords(self.robot.pose.position);
+        let robot_radius = render_config.scale;
+        let (px, py) = self.render_config.pixel_coords(self.robot.pose.position);
         self.gl.draw(args.viewport(), |c, gl| {
             robot_circ.draw([0.0, 0.0, robot_radius, robot_radius],
                             &Default::default(),
@@ -76,9 +76,9 @@ impl App {
             border: None,
             resolution: 32
         };
-        let point_radius = 0.25 * config.scale;
+        let point_radius = 0.25 * render_config.scale;
         for &p in pointcloud.iter() {
-            let (px, py) = self.config.pixel_coords(p.pos);
+            let (px, py) = self.render_config.pixel_coords(p.pos);
             self.gl.draw(args.viewport(), |c, gl| {
                 point.draw([0.0, 0.0, point_radius, point_radius],
                            &Default::default(),
@@ -114,7 +114,7 @@ fn main() {
 
     let mut app = App {
         gl: GlGraphics::new(opengl),
-        config: RendererConfig {
+        render_config: RenderConfig {
             scale: 30.0
         },
         robot: Robot {
@@ -146,8 +146,8 @@ fn main() {
         }
 
         if let Some(a) = e.mouse_scroll_args() {
-            app.config.scale *= 1.0 + 0.2 * a[1];
-            app.config.scale = f64::max(1.0, app.config.scale);
+            app.render_config.scale *= 1.0 + 0.2 * a[1];
+            app.render_config.scale = f64::max(1.0, app.render_config.scale);
         }
     }
 }
