@@ -60,6 +60,10 @@ impl Vector {
         (self.x.powi(2) + self.y.powi(2)).sqrt()
     }
 
+    pub fn dot(&self, q: Vector) -> Scalar {
+        self.x * q.x + q.y * self.y
+    }
+
     pub fn cross(&self, q: Vector) -> Scalar {
         self.x * q.y - q.x * self.y
     }

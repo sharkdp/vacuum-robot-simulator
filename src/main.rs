@@ -17,17 +17,17 @@ pub mod simulation;
 pub mod math;
 
 use math::Scalar;
-use geometry::{Vector, Line, Target};
+use geometry::{Vector, Line, Pose};
+use simulation::robot::Robot;
+use simulation::sensor::laserscanner::LaserScanner;
 
 use renderer::{RendererConfig, Draw};
-
-trait Object: Target + Draw {}
-impl<T> Object for T where T: Target + Draw {}
 
 struct App {
     gl: GlGraphics,
     config: RendererConfig,
-    objects: Vec<Box<Object>>
+    robot: Robot,
+    objects: Vec<Line>
 }
 
 const COLOR_BG: [f32; 4] = [0.17, 0.35, 0.62, 1.0];
@@ -45,16 +45,50 @@ impl App {
 
         // Draw all static objects
         for ref o in &self.objects {
-
             self.gl.draw(args.viewport(), |c, gl| {
                 let transform = c.transform.trans(x, y);
                 o.draw(config, transform, gl);
             });
         }
+
+        // Draw robot
+        use graphics::ellipse::Ellipse;
+        let robot_circ = Ellipse {
+            color: graphics::color::hex("ffd42a"),
+            border: None,
+            resolution: 16
+        };
+
+        let robot_radius = config.scale;
+        let (px, py) = self.config.pixel_coords(self.robot.pose.position);
+        self.gl.draw(args.viewport(), |c, gl| {
+            robot_circ.draw([0.0, 0.0, robot_radius, robot_radius],
+                            &Default::default(),
+                            c.trans(x + px - robot_radius / 2.0, y + py - robot_radius / 2.0).transform,
+                            gl)
+        });
+
+        // TODO: this is just for testing
+        let pointcloud = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
+
+        let point = Ellipse {
+            color: graphics::color::hex("1a1a1a"),
+            border: None,
+            resolution: 32
+        };
+        let point_radius = 0.25 * config.scale;
+        for &p in pointcloud.iter() {
+            let (px, py) = self.config.pixel_coords(p.pos);
+            self.gl.draw(args.viewport(), |c, gl| {
+                point.draw([0.0, 0.0, point_radius, point_radius],
+                           &Default::default(),
+                           c.trans(x + px - point_radius / 2.0, y + py - point_radius / 2.0).transform,
+                           gl)
+            });
+        }
     }
 
-    fn update(&mut self, args: &UpdateArgs) {
-        println!("FPS: {}", 1.0 / args.dt);
+    fn update(&mut self, _: &UpdateArgs) {
     }
 }
 
@@ -66,38 +100,36 @@ fn main() {
             [800, 400]
         )
         .opengl(opengl)
+        .samples(4)
         .exit_on_esc(true)
         .build()
         .unwrap();
 
+    // Little helper to construct vectors
+    let vec = |x, y| Vector::new(x as Scalar, y as Scalar);
+
     let mut app = App {
         gl: GlGraphics::new(opengl),
         config: RendererConfig {
-            scale: 10.0
+            scale: 30.0
+        },
+        robot: Robot {
+            pose: Pose::new(vec(1, 1), 0.0),
+            laser_scanner: LaserScanner {
+                num_columns: 100
+            }
         },
         objects: vec!()
     };
 
-    // Little helper to construct vectors
-    let vec = |x, y| Vector::new(x as Scalar, y as Scalar);
-
-    let line1 = Line::new(vec(0, 0), vec(10, 0));
-    let line2 = Line::new(vec(10, 0), vec(10, 10));
-    let line3 = Line::new(vec(10, 10), vec(0, 10));
-    let line4 = Line::new(vec(0, 10), vec(0, 2));
-    let line5 = Line::new(vec(0, 2), vec(-10, 2));
-    let line6 = Line::new(vec(-10, 2), vec(-10, -12));
-    let line7 = Line::new(vec(-10, -12), vec(0, -12));
-    let line8 = Line::new(vec(0, -12), vec(0, 0));
-
-    app.objects.push(Box::new(line1));
-    app.objects.push(Box::new(line2));
-    app.objects.push(Box::new(line3));
-    app.objects.push(Box::new(line4));
-    app.objects.push(Box::new(line5));
-    app.objects.push(Box::new(line6));
-    app.objects.push(Box::new(line7));
-    app.objects.push(Box::new(line8));
+    app.objects.push(Line::new(vec(0, 0), vec(10, 0)));
+    app.objects.push(Line::new(vec(10, 0), vec(10, 10)));
+    app.objects.push(Line::new(vec(10, 10), vec(0, 10)));
+    app.objects.push(Line::new(vec(0, 10), vec(0, 2)));
+    app.objects.push(Line::new(vec(0, 2), vec(-10, 2)));
+    app.objects.push(Line::new(vec(-10, 2), vec(-10, -12)));
+    app.objects.push(Line::new(vec(-10, -12), vec(0, -12)));
+    app.objects.push(Line::new(vec(0, -12), vec(0, 0)));
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {

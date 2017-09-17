@@ -2,6 +2,6 @@ use simulation::sensor::laserscanner::LaserScanner;
 use geometry::Pose;
 
 pub struct Robot {
-    pose: Pose,
-    laserscanner: LaserScanner
+    pub pose: Pose,
+    pub laser_scanner: LaserScanner
 }
