@@ -1,12 +1,12 @@
 extern crate piston;
 extern crate graphics;
-extern crate glutin_window;
+extern crate piston_window;
 extern crate opengl_graphics;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
 use piston::input::*;
-use glutin_window::GlutinWindow as Window;
+use piston_window::PistonWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
 use graphics::Transformed;
 
@@ -56,7 +56,7 @@ impl App {
         let robot_circ = Ellipse {
             color: graphics::color::hex("ffd42a"),
             border: None,
-            resolution: 16
+            resolution: 64
         };
 
         let robot_radius = config.scale;
@@ -105,6 +105,10 @@ fn main() {
         .build()
         .unwrap();
 
+    // TODO: check this
+    window.set_ups(60);
+    window.set_max_fps(60);
+
     // Little helper to construct vectors
     let vec = |x, y| Vector::new(x as Scalar, y as Scalar);
 
@@ -133,12 +137,17 @@ fn main() {
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
-        if let Some(r) = e.render_args() {
-            app.render(&r);
+        if let Some(a) = e.render_args() {
+            app.render(&a);
         }
 
-        if let Some(u) = e.update_args() {
-            app.update(&u);
+        if let Some(a) = e.update_args() {
+            app.update(&a);
+        }
+
+        if let Some(a) = e.mouse_scroll_args() {
+            app.config.scale *= 1.0 + 0.2 * a[1];
+            app.config.scale = f64::max(1.0, app.config.scale);
         }
     }
 }
