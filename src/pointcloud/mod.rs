@@ -1,4 +1,4 @@
-use geometry::point::Point;
+use geometry::Point;
 use std::slice::{Iter, IterMut};
 
 pub struct PointCloud {

@@ -1,10 +1,10 @@
 use std::fmt;
 use std::cmp;
 
-use types::Scalar;
-use super::vector::Vector;
+use math::Scalar;
+use super::Vector;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Point {
     pub pos: Vector
 }

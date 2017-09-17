@@ -14,7 +14,7 @@ pub struct RendererConfig {
 }
 
 impl RendererConfig {
-    pub fn pixel_coords(&self, vec: geometry::vector::Vector) -> (f64, f64) {
+    pub fn pixel_coords(&self, vec: geometry::Vector) -> (f64, f64) {
         (self.scale * (vec.x as f64), -self.scale * (vec.y as f64))
     }
 }
@@ -28,7 +28,7 @@ pub trait Draw {
             gl: &mut GlGraphics);
 }
 
-impl Draw for geometry::line::Line {
+impl Draw for geometry::Line {
     fn draw(&self, config: &RendererConfig, transform: Matrix2d, gl: &mut GlGraphics) {
         let line = Line::new(WHITE, 1.0);
 

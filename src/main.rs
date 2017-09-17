@@ -10,21 +10,24 @@ use glutin_window::GlutinWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
 use graphics::Transformed;
 
-pub mod types;
 pub mod geometry;
 pub mod pointcloud;
 pub mod renderer;
+pub mod simulation;
+pub mod math;
 
-use types::Scalar;
-use geometry::vector::Vector;
-use geometry::line::Line;
+use math::Scalar;
+use geometry::{Vector, Line, Target};
 
 use renderer::{RendererConfig, Draw};
+
+trait Object: Target + Draw {}
+impl<T> Object for T where T: Target + Draw {}
 
 struct App {
     gl: GlGraphics,
     config: RendererConfig,
-    objects: Vec<Box<Draw>>
+    objects: Vec<Box<Object>>
 }
 
 const COLOR_BG: [f32; 4] = [0.17, 0.35, 0.62, 1.0];

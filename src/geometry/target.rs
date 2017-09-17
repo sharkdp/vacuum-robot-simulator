@@ -1,6 +1,5 @@
-use super::point::Point;
-use super::ray::Ray;
+use super::{Point, Ray};
 
 pub trait Target {
-    fn intersect(&self, ray: &Ray) -> Option<Point>;
+    fn intersect(&self, ray: &Ray) -> Vec<Point>;
 }

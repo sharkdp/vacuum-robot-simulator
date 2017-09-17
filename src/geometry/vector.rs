@@ -2,7 +2,7 @@ use std::fmt;
 use std::ops;
 use std::cmp;
 
-use types::Scalar;
+use math::{Scalar, Angle};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector {
@@ -49,6 +49,11 @@ impl cmp::PartialEq for Vector {
 impl Vector {
     pub fn new(x: Scalar, y: Scalar) -> Vector {
         Vector { x, y }
+    }
+
+    pub fn from_angle(angle: Angle) -> Vector {
+        // 0° is in forward direction (along Y-axis)
+        Vector { x: angle.sin(), y: angle.cos() }
     }
 
     pub fn length(&self) -> Scalar {
