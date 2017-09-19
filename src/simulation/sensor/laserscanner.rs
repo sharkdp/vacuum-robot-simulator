@@ -12,7 +12,7 @@ pub struct LaserScanner {
 }
 
 impl LaserScanner {
-    pub fn scan(&self, pose: &Pose, targets: &Vec<Line>) -> PointCloud {
+    pub fn scan(&self, pose: &Pose, targets: &[Line]) -> PointCloud {
         let mut cloud = PointCloud::empty();
 
         // Comparison function to find the closest point

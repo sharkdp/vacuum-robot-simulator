@@ -1,6 +1,3 @@
-extern crate graphics;
-extern crate opengl_graphics;
-
 use opengl_graphics::GlGraphics;
 
 use graphics::math::Matrix2d;
