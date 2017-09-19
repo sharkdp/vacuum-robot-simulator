@@ -48,46 +48,24 @@ impl App {
 
         let render_config = &self.render_config;
 
-        // Draw all static objects
-        for o in &self.objects {
-            self.gl.draw(args.viewport(), |c, gl| {
-                let transform = c.transform.trans(x, y);
-                o.draw(render_config, transform, gl);
-            });
-        }
+        let objects = &self.objects;
+        let robot = &self.robot;
+        let pointcloud = &self.pointcloud;
 
-        // Draw robot
-        use graphics::ellipse::Ellipse;
-        let robot_circ = Ellipse {
-            color: graphics::color::hex("ffd42a"),
-            border: None,
-            resolution: 64
-        };
-
-        let robot_radius = render_config.scale;
-        let (px, py) = self.render_config.pixel_coords(self.robot.pose.position);
         self.gl.draw(args.viewport(), |c, gl| {
-            robot_circ.draw([0.0, 0.0, robot_radius, robot_radius],
-                            &Default::default(),
-                            c.trans(x + px - robot_radius / 2.0, y + py - robot_radius / 2.0).transform,
-                            gl)
-        });
+            let transform = c.transform.trans(x, y);
 
-        let point = Ellipse {
-            color: graphics::color::hex("1a1a1a"),
-            border: None,
-            resolution: 32
-        };
-        let point_radius = 0.25 * render_config.scale;
-        for &p in self.pointcloud.iter() {
-            let (px, py) = self.render_config.pixel_coords(p.pos);
-            self.gl.draw(args.viewport(), |c, gl| {
-                point.draw([0.0, 0.0, point_radius, point_radius],
-                           &Default::default(),
-                           c.trans(x + px - point_radius / 2.0, y + py - point_radius / 2.0).transform,
-                           gl)
-            });
-        }
+            // Draw all static objects
+            for o in objects {
+                o.draw(render_config, transform, gl);
+            }
+
+            // Draw robot
+            robot.draw(render_config, transform, gl);
+
+            // Draw current LiDAR measurements
+            pointcloud.draw(render_config, transform, gl);
+        });
     }
 
     fn update(&mut self, _: &UpdateArgs) {

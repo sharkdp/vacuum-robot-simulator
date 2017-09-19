@@ -5,7 +5,7 @@ const SIZE: usize = 50;
 const CELL_LENGTH: Scalar = 0.5;
 
 #[derive(Debug, Copy, Clone)]
-struct Cell {
+pub struct Cell {
     count: u32
 }
 
