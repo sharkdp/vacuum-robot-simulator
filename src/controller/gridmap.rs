@@ -19,11 +19,13 @@ pub struct GridMap {
     cells: [[Cell; SIZE]; SIZE]
 }
 
-impl GridMap {
-    pub fn new() -> GridMap {
+impl Default for GridMap {
+    fn default() -> GridMap {
         GridMap { cells: [[Cell::new(); SIZE]; SIZE] }
     }
+}
 
+impl GridMap {
     pub fn clear(&mut self) {
         self.cells = [[Cell::new(); SIZE]; SIZE];
     }

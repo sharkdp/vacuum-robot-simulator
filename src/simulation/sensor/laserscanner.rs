@@ -43,6 +43,6 @@ impl LaserScanner {
     }
 
     fn column_to_angle(&self, column: u32) -> Angle {
-        (column as Scalar) / (self.num_columns as Scalar) * 2.0 * PI
+        Scalar::from(column) / Scalar::from(self.num_columns) * 2.0 * PI
     }
 }

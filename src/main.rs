@@ -40,8 +40,8 @@ const COLOR_BG: [f32; 4] = [0.17, 0.35, 0.62, 1.0];
 impl App {
     fn render(&mut self, args: &RenderArgs) {
 
-        let (x, y) = ((args.width / 2) as f64,
-                      (args.height / 2) as f64);
+        let (x, y) = (f64::from(args.width / 2),
+                      f64::from(args.height / 2));
 
         // Clear screen
         graphics::clear(COLOR_BG, &mut self.gl);
@@ -49,7 +49,7 @@ impl App {
         let render_config = &self.render_config;
 
         // Draw all static objects
-        for ref o in &self.objects {
+        for o in &self.objects {
             self.gl.draw(args.viewport(), |c, gl| {
                 let transform = c.transform.trans(x, y);
                 o.draw(render_config, transform, gl);
@@ -120,7 +120,7 @@ fn main() {
     window.set_max_fps(60);
 
     // Little helper to construct vectors
-    let vec = |x, y| Vector::new(x as Scalar, y as Scalar);
+    let vec = |x, y| Vector::new(Scalar::from(x), Scalar::from(y));
 
     let mut app = App {
         gl: GlGraphics::new(opengl),
@@ -134,7 +134,7 @@ fn main() {
                 num_columns: 100
             }
         },
-        controller: Controller::new(),
+        controller: Controller::default(),
         objects: vec!()
     };
 
