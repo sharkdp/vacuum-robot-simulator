@@ -82,7 +82,7 @@ impl App {
 
         // Move the robot (TODO)
         // self.robot.pose.position.y += 0.0003;
-        self.robot.pose.heading -= 0.0001;
+        // self.robot.pose.heading -= 0.0001;
     }
 }
 
@@ -115,7 +115,7 @@ fn main() {
         robot: Robot {
             pose: Pose::new(vec(1, 1), 0.2),
             laser_scanner: LaserScanner {
-                num_columns: 100
+                num_columns: 200
             }
         },
         controller: Controller::default(),
