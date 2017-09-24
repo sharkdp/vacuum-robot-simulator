@@ -51,6 +51,7 @@ impl App {
         let objects = &self.objects;
         let robot = &self.robot;
         let pointcloud = &self.pointcloud;
+        let controller = &self.controller;
 
         self.gl.draw(args.viewport(), |c, gl| {
             let transform = c.transform.trans(x, y);
@@ -65,6 +66,9 @@ impl App {
 
             // Draw current LiDAR measurements
             pointcloud.draw(render_config, transform, gl);
+
+            // Draw the internal state of the controller
+            controller.draw(render_config, transform, gl);
         });
     }
 
@@ -103,7 +107,7 @@ fn main() {
     let mut app = App {
         gl: GlGraphics::new(opengl),
         render_config: RenderConfig {
-            scale: 30.0
+            scale: 20.0
         },
         pointcloud: PointCloud::empty(),
         robot: Robot {

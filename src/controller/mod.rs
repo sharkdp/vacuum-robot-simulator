@@ -4,7 +4,7 @@ use self::gridmap::GridMap;
 use pointcloud::PointCloud;
 
 pub struct Controller {
-    gridmap: GridMap
+    pub gridmap: GridMap
 }
 
 impl Default for Controller {
@@ -14,11 +14,9 @@ impl Default for Controller {
 }
 
 impl Controller {
-
     pub fn cycle(&mut self, pointcloud: &PointCloud) {
         self.gridmap.clear(); // TODO
 
         self.gridmap.update(pointcloud);
-        self.gridmap.print();
     }
 }

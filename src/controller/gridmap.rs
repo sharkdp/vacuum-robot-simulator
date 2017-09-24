@@ -1,8 +1,8 @@
 use math::Scalar;
 use pointcloud::PointCloud;
 
-const SIZE: usize = 50;
-const CELL_LENGTH: Scalar = 0.5;
+pub const SIZE: usize = 100;
+pub const CELL_LENGTH: Scalar = 0.25;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Cell {
@@ -51,14 +51,9 @@ impl GridMap {
         }
     }
 
-    // TODO
-    pub fn print(&self) {
-        for r in 0 .. SIZE {
-            for c in 0 .. SIZE {
-                print!("{}", if self.cells[r][c].count > 0 { "#" } else { " " });
-            }
-            println!();
-        }
-        println!("---------------");
+    pub fn get_count(&self, r: usize, c: usize) -> Option<u32> {
+        self.cells.get(r)
+                  .and_then(|row| row.get(c))
+                  .map(|cell| cell.count)
     }
 }

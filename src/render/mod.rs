@@ -2,11 +2,13 @@ use opengl_graphics::GlGraphics;
 
 use graphics::math::Matrix2d;
 use graphics::line::Line;
+use graphics::rectangle::Rectangle;
 use graphics::ellipse::Ellipse;
 use graphics::{DrawState, Transformed};
 use graphics::color;
 
 use geometry;
+use controller;
 use simulation::robot;
 use pointcloud;
 
@@ -38,6 +40,47 @@ impl Draw for geometry::Line {
         let coords: [f64; 4] = [x1, y1, x2, y2];
 
         line.draw(coords, &DrawState::default(), transform, gl);
+    }
+}
+
+impl Draw for controller::Controller {
+    fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics) {
+        let transform_gridmap = transform.trans(-450.0, 0.0);
+        self.gridmap.draw(config, transform_gridmap, gl);
+    }
+}
+
+impl Draw for controller::gridmap::GridMap {
+    fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics) {
+        let size = controller::gridmap::SIZE;
+        let cell_size = 0.1 * config.scale;
+
+        // Draw background
+        let rect_bg = Rectangle::new(color::hex("3b3c3d"));
+        let width = cell_size * (size as f64);
+        rect_bg.draw([0.0, -width, width, width],
+                     &DrawState::default(),
+                     transform,
+                     gl);
+
+        // Draw cells
+        let rect_cell = Rectangle::new(WHITE);
+        for r in 0 .. size {
+            for c in 0 .. size {
+                match self.get_count(r, c) {
+                    Some(count) if count > 0 => {
+                        let x =  (c as f64) * cell_size;
+                        let y = -(r as f64) * cell_size;
+
+                        rect_cell.draw([x, y, cell_size, cell_size],
+                                       &DrawState::default(),
+                                       transform,
+                                       gl);
+                    },
+                    _ => {}
+                }
+            }
+        }
     }
 }
 
