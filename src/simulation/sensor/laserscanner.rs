@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 use math::{Scalar, Angle, PI};
 use geometry::{Target, Point, Pose, Ray, Line};
-use pointcloud::PointCloud;
+use sensor::laserscanner::{Scan, Measurement};
 
 pub struct LaserScanner {
     pub num_columns: u32,
@@ -12,8 +12,8 @@ pub struct LaserScanner {
 }
 
 impl LaserScanner {
-    pub fn scan(&self, pose: &Pose, targets: &[Line]) -> PointCloud {
-        let mut cloud = PointCloud::empty();
+    pub fn scan(&self, pose: &Pose, targets: &[Line]) -> Scan {
+        let mut scan = Scan::empty();
 
         // Comparison function to find the closest point
         let distance = |p: &Point| { (p.pos - pose.position).length() };
@@ -35,11 +35,11 @@ impl LaserScanner {
                                      .unwrap_or(Ordering::Equal));
 
             if let Some(p) = closest {
-                cloud.add(*p);
+                scan.add(Measurement::new(angle, distance(p)));
             }
         }
 
-        cloud
+        scan
     }
 
     fn column_to_angle(&self, column: u32) -> Angle {

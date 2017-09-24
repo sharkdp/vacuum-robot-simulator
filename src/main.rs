@@ -15,12 +15,13 @@ pub mod geometry;
 pub mod math;
 pub mod pointcloud;
 pub mod render;
+pub mod sensor;
 pub mod simulation;
 
-use math::Scalar;
-use geometry::{Vector, Line, Pose};
-use pointcloud::PointCloud;
 use controller::Controller;
+use geometry::{Vector, Line, Pose};
+use math::Scalar;
+use sensor::laserscanner::Scan;
 use simulation::robot::Robot;
 use simulation::sensor::laserscanner::LaserScanner;
 
@@ -30,7 +31,7 @@ struct App {
     gl: GlGraphics,
     render_config: RenderConfig,
     robot: Robot,
-    pointcloud: PointCloud,
+    last_scan: Scan,
     controller: Controller,
     objects: Vec<Line>
 }
@@ -50,7 +51,7 @@ impl App {
 
         let objects = &self.objects;
         let robot = &self.robot;
-        let pointcloud = &self.pointcloud;
+        let pointcloud = self.last_scan.to_pointcloud(&robot.pose);
         let controller = &self.controller;
 
         self.gl.draw(args.viewport(), |c, gl| {
@@ -74,13 +75,13 @@ impl App {
 
     fn update(&mut self, _: &UpdateArgs) {
         // Perform a laser scan
-        self.pointcloud = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
+        self.last_scan = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
 
         // Run the perception algorithm
-        self.controller.cycle(&self.pointcloud);
+        self.controller.cycle(&self.last_scan);
 
         // Move the robot (TODO)
-        self.robot.pose.position.y += 0.001;
+        self.robot.pose.position.y += 0.003;
     }
 }
 
@@ -109,7 +110,7 @@ fn main() {
         render_config: RenderConfig {
             scale: 20.0
         },
-        pointcloud: PointCloud::empty(),
+        last_scan: Scan::empty(),
         robot: Robot {
             pose: Pose::new(vec(1, 1), 0.0),
             laser_scanner: LaserScanner {

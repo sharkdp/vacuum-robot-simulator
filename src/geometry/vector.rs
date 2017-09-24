@@ -71,4 +71,10 @@ impl Vector {
     pub fn angle(&self) -> Scalar {
         self.y.atan2(self.x)
     }
+
+    pub fn rotate(&self, angle: Angle) -> Vector {
+        let c = angle.cos();
+        let s = angle.sin();
+        Vector::new(c * self.x + s * self.y, -s * self.x + c * self.y)
+    }
 }

@@ -52,6 +52,7 @@ impl Draw for controller::Controller {
 
 impl Draw for controller::gridmap::GridMap {
     fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics) {
+        use controller::gridmap::CellState::*;
         let size = controller::gridmap::SIZE;
         let cell_size = 0.1 * config.scale;
 
@@ -64,18 +65,26 @@ impl Draw for controller::gridmap::GridMap {
                      gl);
 
         // Draw cells
-        let rect_cell = Rectangle::new(WHITE);
+        let mut draw_cell = |rect: Rectangle, r, c| {
+            let x =  (c as f64) * cell_size;
+            let y = -(r as f64) * cell_size;
+
+            rect.draw([x, y, cell_size, cell_size],
+                      &DrawState::default(),
+                      transform,
+                      gl);
+        };
+
+        let rect_occupied = Rectangle::new(WHITE);
+        let rect_freespace = Rectangle::new(color::hex("ff0000"));
         for r in 0 .. size {
             for c in 0 .. size {
-                match self.get_count(r, c) {
-                    Some(count) if count > 0 => {
-                        let x =  (c as f64) * cell_size;
-                        let y = -(r as f64) * cell_size;
-
-                        rect_cell.draw([x, y, cell_size, cell_size],
-                                       &DrawState::default(),
-                                       transform,
-                                       gl);
+                match self.cell_state(r, c) {
+                    Some(&Occupied(_)) => {
+                        draw_cell(rect_occupied, r, c)
+                    },
+                    Some(&Freespace) => {
+                        draw_cell(rect_freespace, r, c)
                     },
                     _ => {}
                 }

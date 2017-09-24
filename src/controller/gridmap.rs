@@ -1,40 +1,52 @@
 use math::Scalar;
-use pointcloud::PointCloud;
+use sensor::laserscanner::Scan;
 
 pub const SIZE: usize = 100;
 pub const CELL_LENGTH: Scalar = 0.25;
 
 #[derive(Debug, Copy, Clone)]
-pub struct Cell {
-    count: u32
+pub enum CellState {
+    Occupied(u32),
+    Freespace,
+    Void
 }
 
-impl Cell {
-    fn new() -> Cell {
-        Cell { count: 0 }
+impl Default for CellState {
+    fn default() -> CellState {
+        CellState::Void
     }
 }
 
 pub struct GridMap {
-    cells: [[Cell; SIZE]; SIZE]
+    cells: [[CellState; SIZE]; SIZE]
 }
 
 impl Default for GridMap {
     fn default() -> GridMap {
-        GridMap { cells: [[Cell::new(); SIZE]; SIZE] }
+        GridMap { cells: [[CellState::default(); SIZE]; SIZE] }
     }
 }
 
 impl GridMap {
     pub fn clear(&mut self) {
-        self.cells = [[Cell::new(); SIZE]; SIZE];
+        self.cells = [[CellState::default(); SIZE]; SIZE];
     }
 
-    pub fn update(&mut self, pointcloud: &PointCloud) {
-        for &p in pointcloud.iter() {
-            let r = GridMap::index_from_pos(p.pos.y);
-            let c = GridMap::index_from_pos(p.pos.x);
-            self.cells[r][c].count += 1;
+    pub fn update(&mut self, scan: &Scan) {
+        use self::CellState::*;
+
+        for &m in scan.iter() {
+            let v = m.to_vector();
+
+            let r = GridMap::index_from_pos(v.y);
+            let c = GridMap::index_from_pos(v.x);
+
+            let cell: &mut CellState = &mut self.cells[r][c];
+            *cell = match *cell {
+                Occupied(count) => Occupied(count + 1),
+                Freespace => Occupied(1),
+                Void => Occupied(1)
+            }
         }
     }
 
@@ -51,9 +63,8 @@ impl GridMap {
         }
     }
 
-    pub fn get_count(&self, r: usize, c: usize) -> Option<u32> {
+    pub fn cell_state(&self, r: usize, c: usize) -> Option<&CellState> {
         self.cells.get(r)
                   .and_then(|row| row.get(c))
-                  .map(|cell| cell.count)
     }
 }
