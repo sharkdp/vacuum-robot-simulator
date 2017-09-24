@@ -95,19 +95,26 @@ impl Draw for controller::gridmap::GridMap {
 
 impl Draw for robot::Robot {
     fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics) {
+        let robot_color = color::hex("ffd42a");
         let robot_circ = Ellipse {
-            color: color::hex("ffd42a"),
+            color: robot_color,
             border: None,
             resolution: 64
         };
 
         let robot_radius = config.scale;
-        let (px, py) = config.pixel_coords(self.pose.position);
+        let pos = self.pose.position;
+        let (px, py) = config.pixel_coords(pos);
 
         robot_circ.draw([0.0, 0.0, robot_radius, robot_radius],
                         &Default::default(),
                         transform.trans(px - robot_radius / 2.0, py - robot_radius / 2.0),
-                        gl)
+                        gl);
+
+        // Draw heading angle
+        let line = Line::new(robot_color, 1.0);
+        let (hx, hy) = config.pixel_coords(pos + self.pose.heading * config.scale * 0.05);
+        line.draw([px, py, hx, hy], &DrawState::default(), transform, gl);
     }
 }
 
