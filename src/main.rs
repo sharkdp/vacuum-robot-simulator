@@ -78,10 +78,11 @@ impl App {
         self.last_scan = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
 
         // Run the perception algorithm
-        self.controller.cycle(&self.last_scan);
+        self.controller.cycle(&self.last_scan, &self.robot.pose);
 
         // Move the robot (TODO)
         self.robot.pose.position.y += 0.003;
+        self.robot.pose.heading = self.robot.pose.heading.rotate(0.001);
     }
 }
 
@@ -112,7 +113,7 @@ fn main() {
         },
         last_scan: Scan::empty(),
         robot: Robot {
-            pose: Pose::new(vec(1, 1), 0.0),
+            pose: Pose::new(vec(1, 1), 0.2),
             laser_scanner: LaserScanner {
                 num_columns: 100
             }

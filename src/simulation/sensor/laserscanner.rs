@@ -20,8 +20,8 @@ impl LaserScanner {
 
         // Raycasting
         for col in 0 .. self.num_columns {
-            let angle = pose.heading.angle() + self.column_to_angle(col);
-            let ray = Ray::from_angle(pose.position, angle);
+            let col_angle = self.column_to_angle(col);
+            let ray = Ray::from_angle(pose.position, pose.heading.angle() + col_angle);
 
             let mut points = vec!();
             for target in targets.iter() {
@@ -35,7 +35,7 @@ impl LaserScanner {
                                      .unwrap_or(Ordering::Equal));
 
             if let Some(p) = closest {
-                scan.add(Measurement::new(angle, distance(p)));
+                scan.add(Measurement::new(col_angle, distance(p)));
             }
         }
 
