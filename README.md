@@ -13,4 +13,4 @@ able to localize itself within and navigate through its (virtual) environment.
 - **Control:** rotate_by(*angle*), drive_forward(*distance*) - with simulated imprecision
 
 ## Preview
-![Preview](https://i.imgur.com/6YxpPyu.png)
+![Preview](https://i.imgur.com/VL79POz.png)

@@ -81,8 +81,8 @@ impl App {
         self.controller.cycle(&self.last_scan, &self.robot.pose);
 
         // Move the robot (TODO)
-        self.robot.pose.position.y += 0.003;
-        self.robot.pose.heading = self.robot.pose.heading.rotate(0.001);
+        // self.robot.pose.position.y += 0.0003;
+        self.robot.pose.heading -= 0.0001;
     }
 }
 

@@ -21,7 +21,7 @@ impl LaserScanner {
         // Raycasting
         for col in 0 .. self.num_columns {
             let col_angle = self.column_to_angle(col);
-            let ray = Ray::from_angle(pose.position, pose.heading.angle() + col_angle);
+            let ray = Ray::from_angle(pose.position, pose.heading + col_angle);
 
             let mut points = vec!();
             for target in targets.iter() {

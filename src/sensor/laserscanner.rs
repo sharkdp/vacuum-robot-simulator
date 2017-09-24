@@ -9,8 +9,8 @@ use pointcloud::PointCloud;
 /// A single measurement (distance reading) of a laser scanner.
 #[derive(Debug, Clone, Copy)]
 pub struct Measurement {
-    angle: Angle,
-    distance: Scalar
+    pub angle: Angle,
+    pub distance: Scalar
 }
 
 impl Measurement {
@@ -19,7 +19,7 @@ impl Measurement {
     }
 
     pub fn to_vector(&self, pose: &Pose) -> Vector {
-        let direction = pose.heading.rotate(self.angle);
+        let direction = Vector::from_angle(pose.heading + self.angle);
         pose.position + direction * self.distance
     }
 }

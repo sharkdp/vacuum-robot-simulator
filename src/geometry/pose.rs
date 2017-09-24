@@ -4,7 +4,7 @@ use super::Vector;
 #[derive(Debug, Clone)]
 pub struct Pose {
     pub position: Vector,
-    pub heading: Vector
+    pub heading: Angle
 }
 
 impl Default for Pose {
@@ -15,6 +15,6 @@ impl Default for Pose {
 
 impl Pose {
     pub fn new(position: Vector, heading: Angle) -> Pose {
-        Pose { position, heading: Vector::from_angle(heading) }
+        Pose { position, heading }
     }
 }

@@ -57,7 +57,7 @@ impl Draw for controller::gridmap::GridMap {
         let cell_size = 0.1 * config.scale;
 
         // Draw background
-        let rect_bg = Rectangle::new(color::hex("3b3c3d"));
+        let rect_bg = Rectangle::new(color::hex("333333"));
         let width = cell_size * (size as f64);
         rect_bg.draw([0.0, -width, width, width],
                      &DrawState::default(),
@@ -76,7 +76,7 @@ impl Draw for controller::gridmap::GridMap {
         };
 
         let rect_occupied = Rectangle::new(WHITE);
-        let rect_freespace = Rectangle::new(color::hex("ff0000"));
+        let rect_freespace = Rectangle::new(color::hex("525f49"));
         for r in 0 .. size {
             for c in 0 .. size {
                 match self.cell_state(r, c) {
@@ -113,7 +113,7 @@ impl Draw for robot::Robot {
 
         // Draw heading angle
         let line = Line::new(robot_color, 1.0);
-        let (hx, hy) = config.pixel_coords(pos + self.pose.heading * config.scale * 0.05);
+        let (hx, hy) = config.pixel_coords(pos + geometry::Vector::from_angle(self.pose.heading) * config.scale * 0.05);
         line.draw([px, py, hx, hy], &DrawState::default(), transform, gl);
     }
 }

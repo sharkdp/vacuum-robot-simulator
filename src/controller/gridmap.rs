@@ -50,6 +50,25 @@ impl GridMap {
                 },
                 _ => {}
             }
+
+            // Find free space
+            // TODO: use a proper line drawing algo. this is horrible
+            let num = 100;
+            for i in 0 .. num {
+                let alpha = Scalar::from(i) / Scalar::from(num);
+                let p = pose.position + Vector::from_angle(pose.heading + m.angle) * alpha * m.distance;
+
+                match GridMap::indices_from_pos(p) {
+                    Some((r, c)) => {
+                        let cell: &mut CellState = &mut self.cells[r][c];
+                        *cell = match *cell {
+                            Void => Freespace,
+                            o => o
+                        };
+                    },
+                    _ => {}
+                }
+            }
         }
     }
 
