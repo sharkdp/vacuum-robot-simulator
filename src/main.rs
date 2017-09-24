@@ -2,6 +2,11 @@ extern crate piston;
 extern crate graphics;
 extern crate piston_window;
 extern crate opengl_graphics;
+extern crate svg2polylines;
+
+use std::env;
+use std::fs;
+use std::io::Read;
 
 use piston::window::WindowSettings;
 use piston::event_loop::*;
@@ -9,6 +14,7 @@ use piston::input::*;
 use piston_window::PistonWindow as Window;
 use opengl_graphics::{ GlGraphics, OpenGL };
 use graphics::Transformed;
+use svg2polylines::Polyline;
 
 pub mod controller;
 pub mod geometry;
@@ -81,7 +87,7 @@ impl App {
         self.controller.cycle(&self.last_scan, &self.robot.pose);
 
         // Move the robot (TODO)
-        // self.robot.pose.position.y += 0.0003;
+        self.robot.pose.position.y += 0.003;
         // self.robot.pose.heading -= 0.0001;
     }
 }
@@ -122,19 +128,37 @@ fn main() {
         objects: vec!()
     };
 
-    app.objects.push(Line::new(vec(0, 0), vec(10, 0)));
-    app.objects.push(Line::new(vec(10, 0), vec(10, 10)));
-    app.objects.push(Line::new(vec(10, 10), vec(0, 10)));
-    app.objects.push(Line::new(vec(0, 10), vec(0, 2)));
-    app.objects.push(Line::new(vec(0, 2), vec(-10, 2)));
-    app.objects.push(Line::new(vec(-10, 2), vec(-10, -12)));
-    app.objects.push(Line::new(vec(-10, -12), vec(0, -12)));
-    app.objects.push(Line::new(vec(0, -12), vec(0, 0)));
+    // Read static world from SVG file
+    let args: Vec<_> = env::args().collect();
+    match args.len() {
+        2 => {},
+        _ => {
+            println!("Usage: {} <map.svg>", args[0]);
+            std::process::exit(1);
+        },
+    };
 
-    app.objects.push(Line::new(vec(4, 4), vec(5, 4)));
-    app.objects.push(Line::new(vec(5, 4), vec(5, 5)));
-    app.objects.push(Line::new(vec(5, 5), vec(4, 5)));
-    app.objects.push(Line::new(vec(4, 5), vec(4, 4)));
+    let mut file = fs::File::open(&args[1]).unwrap();
+    let mut s = String::new();
+    file.read_to_string(&mut s).unwrap();
+
+    // Parse data
+    let polylines: Vec<Polyline> = svg2polylines::parse(&s).unwrap_or_else(|e| {
+        println!("Error: {}", e);
+        std::process::exit(1);
+    });
+
+    let m_per_px = 0.02;
+    for polyline in &polylines {
+        for pair in polyline.windows(2) {
+            app.objects.push(
+                Line::new(
+                    Vector::new(pair[0].x * m_per_px, -pair[0].y * m_per_px),
+                    Vector::new(pair[1].x * m_per_px, -pair[1].y * m_per_px)
+                )
+            )
+        }
+    }
 
     let mut events = Events::new(EventSettings::new());
     while let Some(e) = events.next(&mut window) {
