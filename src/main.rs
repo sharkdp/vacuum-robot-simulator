@@ -115,7 +115,7 @@ fn main() {
         robot: Robot {
             pose: Pose::new(vec(1, 1), 0.2),
             laser_scanner: LaserScanner {
-                num_columns: 200
+                num_columns: 100
             }
         },
         controller: Controller::default(),
