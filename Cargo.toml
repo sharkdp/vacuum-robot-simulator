@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["David Peter <davidpeter@web.de>"]
 
 [dependencies]
-piston = "0.33.0"
+piston = "0.38.0"
 piston2d-graphics = "0.21.1"
 piston_window = "0.70.0"
 piston2d-opengl_graphics = "0.46.0"
