@@ -1,13 +1,13 @@
+use std::cmp;
 use std::fmt;
 use std::ops;
-use std::cmp;
 
-use math::{Scalar, Angle};
+use math::{Angle, Scalar};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector {
     pub x: Scalar,
-    pub y: Scalar
+    pub y: Scalar,
 }
 
 impl fmt::Display for Vector {
@@ -53,7 +53,10 @@ impl Vector {
 
     pub fn from_angle(angle: Angle) -> Vector {
         // 0° is in forward direction (along Y-axis)
-        Vector { x: -angle.sin(), y: angle.cos() }
+        Vector {
+            x: -angle.sin(),
+            y: angle.cos(),
+        }
     }
 
     pub fn length(&self) -> Scalar {

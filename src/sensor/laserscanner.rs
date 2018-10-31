@@ -1,16 +1,15 @@
 /// Types for dealing with laser scanner measurements
-
 use std::slice::Iter;
 
-use math::{Scalar, Angle};
-use geometry::{Vector, Point, Pose};
+use geometry::{Point, Pose, Vector};
+use math::{Angle, Scalar};
 use pointcloud::PointCloud;
 
 /// A single measurement (distance reading) of a laser scanner.
 #[derive(Debug, Clone, Copy)]
 pub struct Measurement {
     pub angle: Angle,
-    pub distance: Scalar
+    pub distance: Scalar,
 }
 
 impl Measurement {
@@ -26,12 +25,14 @@ impl Measurement {
 
 /// A full 360° scan from a laser scanner.
 pub struct Scan {
-    measurements: Vec<Measurement>
+    measurements: Vec<Measurement>,
 }
 
 impl Scan {
     pub fn empty() -> Scan {
-        Scan { measurements: Vec::new() }
+        Scan {
+            measurements: Vec::new(),
+        }
     }
 
     pub fn add(&mut self, m: Measurement) {
@@ -44,10 +45,11 @@ impl Scan {
 
     pub fn to_pointcloud(&self, pose: &Pose) -> PointCloud {
         PointCloud::new(
-            self.measurements.iter()
-                             .map(|m| m.to_vector(pose))
-                             .map(Point::from_vector)
-                             .collect()
-       )
+            self.measurements
+                .iter()
+                .map(|m| m.to_vector(pose))
+                .map(Point::from_vector)
+                .collect(),
+        )
     }
 }

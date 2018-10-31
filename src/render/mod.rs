@@ -1,19 +1,19 @@
 use opengl_graphics::GlGraphics;
 
-use graphics::math::Matrix2d;
-use graphics::line::Line;
-use graphics::rectangle::Rectangle;
-use graphics::ellipse::Ellipse;
-use graphics::{DrawState, Transformed};
 use graphics::color;
+use graphics::ellipse::Ellipse;
+use graphics::line::Line;
+use graphics::math::Matrix2d;
+use graphics::rectangle::Rectangle;
+use graphics::{DrawState, Transformed};
 
-use geometry;
 use controller;
-use simulation::robot;
+use geometry;
 use pointcloud;
+use simulation::robot;
 
 pub struct RenderConfig {
-    pub scale: f64
+    pub scale: f64,
 }
 
 impl RenderConfig {
@@ -25,10 +25,7 @@ impl RenderConfig {
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
 pub trait Draw {
-    fn draw(&self,
-            config: &RenderConfig,
-            transform: Matrix2d,
-            gl: &mut GlGraphics);
+    fn draw(&self, config: &RenderConfig, transform: Matrix2d, gl: &mut GlGraphics);
 }
 
 impl Draw for geometry::Line {
@@ -59,33 +56,33 @@ impl Draw for controller::gridmap::GridMap {
         // Draw background
         let rect_bg = Rectangle::new(color::hex("333333"));
         let width = cell_size * (size as f64);
-        rect_bg.draw([0.0, -width, width, width],
-                     &DrawState::default(),
-                     transform,
-                     gl);
+        rect_bg.draw(
+            [0.0, -width, width, width],
+            &DrawState::default(),
+            transform,
+            gl,
+        );
 
         // Draw cells
         let mut draw_cell = |rect: Rectangle, r, c| {
-            let x =  (c as f64) * cell_size;
+            let x = (c as f64) * cell_size;
             let y = -(r as f64) * cell_size;
 
-            rect.draw([x, y, cell_size, cell_size],
-                      &DrawState::default(),
-                      transform,
-                      gl);
+            rect.draw(
+                [x, y, cell_size, cell_size],
+                &DrawState::default(),
+                transform,
+                gl,
+            );
         };
 
         let rect_occupied = Rectangle::new(WHITE);
         let rect_freespace = Rectangle::new(color::hex("525f49"));
-        for r in 0 .. size {
-            for c in 0 .. size {
+        for r in 0..size {
+            for c in 0..size {
                 match self.cell_state(r, c) {
-                    Some(&Occupied(_)) => {
-                        draw_cell(rect_occupied, r, c)
-                    },
-                    Some(&Freespace) => {
-                        draw_cell(rect_freespace, r, c)
-                    },
+                    Some(&Occupied(_)) => draw_cell(rect_occupied, r, c),
+                    Some(&Freespace) => draw_cell(rect_freespace, r, c),
                     _ => {}
                 }
             }
@@ -99,21 +96,25 @@ impl Draw for robot::Robot {
         let robot_circ = Ellipse {
             color: robot_color,
             border: None,
-            resolution: 64
+            resolution: 64,
         };
 
         let robot_radius = config.scale;
         let pos = self.pose.position;
         let (px, py) = config.pixel_coords(pos);
 
-        robot_circ.draw([0.0, 0.0, robot_radius, robot_radius],
-                        &Default::default(),
-                        transform.trans(px - robot_radius / 2.0, py - robot_radius / 2.0),
-                        gl);
+        robot_circ.draw(
+            [0.0, 0.0, robot_radius, robot_radius],
+            &Default::default(),
+            transform.trans(px - robot_radius / 2.0, py - robot_radius / 2.0),
+            gl,
+        );
 
         // Draw heading angle
         let line = Line::new(robot_color, 1.0);
-        let (hx, hy) = config.pixel_coords(pos + geometry::Vector::from_angle(self.pose.heading) * config.scale * 0.05);
+        let (hx, hy) = config.pixel_coords(
+            pos + geometry::Vector::from_angle(self.pose.heading) * config.scale * 0.05,
+        );
         line.draw([px, py, hx, hy], &DrawState::default(), transform, gl);
     }
 }
@@ -123,16 +124,18 @@ impl Draw for pointcloud::PointCloud {
         let point = Ellipse {
             color: color::hex("1a1a1a"),
             border: None,
-            resolution: 32
+            resolution: 32,
         };
         let point_radius = 0.25 * config.scale;
         for &p in self.iter() {
             let (px, py) = config.pixel_coords(p.pos);
 
-            point.draw([0.0, 0.0, point_radius, point_radius],
-                       &Default::default(),
-                       transform.trans(px - point_radius / 2.0, py - point_radius / 2.0),
-                       gl)
+            point.draw(
+                [0.0, 0.0, point_radius, point_radius],
+                &Default::default(),
+                transform.trans(px - point_radius / 2.0, py - point_radius / 2.0),
+                gl,
+            )
         }
     }
 }

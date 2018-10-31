@@ -1,8 +1,8 @@
-use super::{Vector, Target, Ray, Point};
+use super::{Point, Ray, Target, Vector};
 
 pub struct Line {
     pub start: Vector,
-    pub end:   Vector
+    pub end: Vector,
 }
 
 impl Line {
@@ -31,7 +31,7 @@ impl Target for Line {
             let t = (q - p).cross(s) / d;
 
             if t > 0.0 && u > 0.0 && u <= 1.0 {
-                vec!(Point::from_vector(hit))
+                vec![Point::from_vector(hit)]
             } else {
                 Vec::new()
             }

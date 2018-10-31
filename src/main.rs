@@ -1,16 +1,16 @@
-extern crate piston;
 extern crate graphics;
-extern crate piston_window;
 extern crate opengl_graphics;
+extern crate piston;
+extern crate piston_window;
 extern crate svg2polylines;
 
 use std::env;
 use std::fs;
 use std::io::Read;
 
-use piston_window::*;
-use opengl_graphics::{GlGraphics, OpenGL};
 use graphics::Transformed;
+use opengl_graphics::{GlGraphics, OpenGL};
+use piston_window::*;
 use svg2polylines::Polyline;
 
 pub mod controller;
@@ -22,13 +22,13 @@ pub mod sensor;
 pub mod simulation;
 
 use controller::Controller;
-use geometry::{Vector, Line, Pose};
+use geometry::{Line, Pose, Vector};
 use math::Scalar;
 use sensor::laserscanner::Scan;
 use simulation::robot::Robot;
 use simulation::sensor::laserscanner::LaserScanner;
 
-use render::{RenderConfig, Draw};
+use render::{Draw, RenderConfig};
 
 struct App {
     gl: GlGraphics,
@@ -36,16 +36,14 @@ struct App {
     robot: Robot,
     last_scan: Scan,
     controller: Controller,
-    objects: Vec<Line>
+    objects: Vec<Line>,
 }
 
 const COLOR_BG: [f32; 4] = [0.17, 0.35, 0.62, 1.0];
 
 impl App {
     fn render(&mut self, args: &RenderArgs) {
-
-        let (x, y) = (f64::from(args.width / 2),
-                      f64::from(args.height / 2));
+        let (x, y) = (f64::from(args.width / 2), f64::from(args.height / 2));
 
         // Clear screen
         graphics::clear(COLOR_BG, &mut self.gl);
@@ -78,7 +76,10 @@ impl App {
 
     fn update(&mut self, _: &UpdateArgs) {
         // Perform a laser scan
-        self.last_scan = self.robot.laser_scanner.scan(&self.robot.pose, &self.objects);
+        self.last_scan = self
+            .robot
+            .laser_scanner
+            .scan(&self.robot.pose, &self.objects);
 
         // Run the perception algorithm
         self.controller.cycle(&self.last_scan, &self.robot.pose);
@@ -92,10 +93,7 @@ impl App {
 fn main() {
     let opengl = OpenGL::V3_2;
 
-    let mut window: PistonWindow = WindowSettings::new(
-            "Vacuum Robot Simulator",
-            [800, 400]
-        )
+    let mut window: PistonWindow = WindowSettings::new("Vacuum Robot Simulator", [800, 400])
         .opengl(opengl)
         .samples(4)
         .exit_on_esc(true)
@@ -111,28 +109,24 @@ fn main() {
 
     let mut app = App {
         gl: GlGraphics::new(opengl),
-        render_config: RenderConfig {
-            scale: 20.0
-        },
+        render_config: RenderConfig { scale: 20.0 },
         last_scan: Scan::empty(),
         robot: Robot {
             pose: Pose::new(vec(1, 1), 0.2),
-            laser_scanner: LaserScanner {
-                num_columns: 100
-            }
+            laser_scanner: LaserScanner { num_columns: 100 },
         },
         controller: Controller::default(),
-        objects: vec!()
+        objects: vec![],
     };
 
     // Read static world from SVG file
     let args: Vec<_> = env::args().collect();
     match args.len() {
-        2 => {},
+        2 => {}
         _ => {
             println!("Usage: {} <map.svg>", args[0]);
             std::process::exit(1);
-        },
+        }
     };
 
     let mut file = fs::File::open(&args[1]).unwrap();
@@ -148,12 +142,10 @@ fn main() {
     let m_per_px = 0.02;
     for polyline in &polylines {
         for pair in polyline.windows(2) {
-            app.objects.push(
-                Line::new(
-                    Vector::new(pair[0].x * m_per_px, -pair[0].y * m_per_px),
-                    Vector::new(pair[1].x * m_per_px, -pair[1].y * m_per_px)
-                )
-            )
+            app.objects.push(Line::new(
+                Vector::new(pair[0].x * m_per_px, -pair[0].y * m_per_px),
+                Vector::new(pair[1].x * m_per_px, -pair[1].y * m_per_px),
+            ))
         }
     }
 

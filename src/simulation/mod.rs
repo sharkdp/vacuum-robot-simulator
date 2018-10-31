@@ -1,2 +1,2 @@
-pub mod sensor;
 pub mod robot;
+pub mod sensor;

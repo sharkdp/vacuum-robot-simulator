@@ -1,5 +1,5 @@
-use math::Scalar;
 use geometry::{Pose, Vector};
+use math::Scalar;
 use sensor::laserscanner::Scan;
 
 pub const SIZE: usize = 111;
@@ -9,7 +9,7 @@ pub const CELL_LENGTH: Scalar = 0.25;
 pub enum CellState {
     Occupied(u32),
     Freespace,
-    Void
+    Void,
 }
 
 impl Default for CellState {
@@ -19,12 +19,14 @@ impl Default for CellState {
 }
 
 pub struct GridMap {
-    cells: [[CellState; SIZE]; SIZE]
+    cells: [[CellState; SIZE]; SIZE],
 }
 
 impl Default for GridMap {
     fn default() -> GridMap {
-        GridMap { cells: [[CellState::default(); SIZE]; SIZE] }
+        GridMap {
+            cells: [[CellState::default(); SIZE]; SIZE],
+        }
     }
 }
 
@@ -45,27 +47,28 @@ impl GridMap {
                     *cell = match *cell {
                         Occupied(count) => Occupied(count + 1),
                         Freespace => Occupied(1),
-                        Void => Occupied(1)
+                        Void => Occupied(1),
                     };
-                },
+                }
                 _ => {}
             }
 
             // Find free space
             // TODO: use a proper line drawing algo. this is horrible
             let num = 100;
-            for i in 0 .. num {
+            for i in 0..num {
                 let alpha = Scalar::from(i) / Scalar::from(num);
-                let p = pose.position + Vector::from_angle(pose.heading + m.angle) * alpha * m.distance;
+                let p =
+                    pose.position + Vector::from_angle(pose.heading + m.angle) * alpha * m.distance;
 
                 match GridMap::indices_from_pos(p) {
                     Some((r, c)) => {
                         let cell: &mut CellState = &mut self.cells[r][c];
                         *cell = match *cell {
                             Void => Freespace,
-                            o => o
+                            o => o,
                         };
-                    },
+                    }
                     _ => {}
                 }
             }
@@ -89,7 +92,6 @@ impl GridMap {
     }
 
     pub fn cell_state(&self, r: usize, c: usize) -> Option<&CellState> {
-        self.cells.get(r)
-                  .and_then(|row| row.get(c))
+        self.cells.get(r).and_then(|row| row.get(c))
     }
 }

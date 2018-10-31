@@ -2,7 +2,7 @@ use geometry::Point;
 use std::slice::{Iter, IterMut};
 
 pub struct PointCloud {
-    points: Vec<Point>
+    points: Vec<Point>,
 }
 
 impl PointCloud {
@@ -11,7 +11,7 @@ impl PointCloud {
     }
 
     pub fn empty() -> PointCloud {
-        PointCloud { points: vec!() }
+        PointCloud { points: vec![] }
     }
 
     pub fn size(&self) -> usize {

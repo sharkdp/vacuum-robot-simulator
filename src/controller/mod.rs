@@ -7,12 +7,15 @@ use self::gridmap::GridMap;
 
 pub struct Controller {
     pub gridmap: GridMap,
-    pub pose_estimate: Pose
+    pub pose_estimate: Pose,
 }
 
 impl Default for Controller {
     fn default() -> Controller {
-        Controller { gridmap: GridMap::default(), pose_estimate: Pose::default() }
+        Controller {
+            gridmap: GridMap::default(),
+            pose_estimate: Pose::default(),
+        }
     }
 }
 

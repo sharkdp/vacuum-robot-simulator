@@ -1,9 +1,9 @@
-use math::Angle;
 use super::Vector;
+use math::Angle;
 
 pub struct Ray {
     pub origin: Vector,
-    pub direction: Vector
+    pub direction: Vector,
 }
 
 impl Ray {
@@ -12,6 +12,9 @@ impl Ray {
     }
 
     pub fn from_angle(origin: Vector, angle: Angle) -> Ray {
-        Ray { origin, direction: Vector::from_angle(angle) }
+        Ray {
+            origin,
+            direction: Vector::from_angle(angle),
+        }
     }
 }

@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 
-use math::{Scalar, Angle, PI};
-use geometry::{Target, Point, Pose, Ray, Line};
-use sensor::laserscanner::{Scan, Measurement};
+use geometry::{Line, Point, Pose, Ray, Target};
+use math::{Angle, Scalar, PI};
+use sensor::laserscanner::{Measurement, Scan};
 
 pub struct LaserScanner {
     pub num_columns: u32,
@@ -16,23 +16,25 @@ impl LaserScanner {
         let mut scan = Scan::empty();
 
         // Comparison function to find the closest point
-        let distance = |p: &Point| { (p.pos - pose.position).length() };
+        let distance = |p: &Point| (p.pos - pose.position).length();
 
         // Raycasting
-        for col in 0 .. self.num_columns {
+        for col in 0..self.num_columns {
             let col_angle = self.column_to_angle(col);
             let ray = Ray::from_angle(pose.position, pose.heading + col_angle);
 
-            let mut points = vec!();
+            let mut points = vec![];
             for target in targets.iter() {
                 let mut candidates = target.intersect(&ray);
                 points.append(&mut candidates);
             }
 
             // Only take the point closest to the sensor
-            let closest = points.iter().min_by(
-                |p1, p2| distance(p1).partial_cmp(&distance(p2))
-                                     .unwrap_or(Ordering::Equal));
+            let closest = points.iter().min_by(|p1, p2| {
+                distance(p1)
+                    .partial_cmp(&distance(p2))
+                    .unwrap_or(Ordering::Equal)
+            });
 
             if let Some(p) = closest {
                 scan.add(Measurement::new(col_angle, distance(p)));

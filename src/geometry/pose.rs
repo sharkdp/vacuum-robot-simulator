@@ -1,10 +1,10 @@
-use math::Angle;
 use super::Vector;
+use math::Angle;
 
 #[derive(Debug, Clone)]
 pub struct Pose {
     pub position: Vector,
-    pub heading: Angle
+    pub heading: Angle,
 }
 
 impl Default for Pose {

@@ -1,12 +1,12 @@
-use std::fmt;
 use std::cmp;
+use std::fmt;
 
-use math::Scalar;
 use super::Vector;
+use math::Scalar;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Point {
-    pub pos: Vector
+    pub pos: Vector,
 }
 
 impl fmt::Display for Point {
@@ -23,7 +23,9 @@ impl cmp::PartialEq for Point {
 
 impl Point {
     pub fn new(x: Scalar, y: Scalar) -> Point {
-        Point { pos: Vector::new(x, y) }
+        Point {
+            pos: Vector::new(x, y),
+        }
     }
 
     pub fn from_vector(pos: Vector) -> Point {
