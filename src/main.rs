@@ -8,11 +8,8 @@ use std::env;
 use std::fs;
 use std::io::Read;
 
-use piston::window::WindowSettings;
-use piston::event_loop::*;
-use piston::input::*;
-use piston_window::PistonWindow as Window;
-use opengl_graphics::{ GlGraphics, OpenGL };
+use piston_window::*;
+use opengl_graphics::{GlGraphics, OpenGL};
 use graphics::Transformed;
 use svg2polylines::Polyline;
 
@@ -95,7 +92,7 @@ impl App {
 fn main() {
     let opengl = OpenGL::V3_2;
 
-    let mut window: Window = WindowSettings::new(
+    let mut window: PistonWindow = WindowSettings::new(
             "Vacuum Robot Simulator",
             [800, 400]
         )
@@ -106,8 +103,8 @@ fn main() {
         .unwrap();
 
     // TODO: check this
-    window.set_ups(60);
-    window.set_max_fps(60);
+    // window.set_ups(60);
+    // window.set_max_fps(60);
 
     // Little helper to construct vectors
     let vec = |x, y| Vector::new(Scalar::from(x), Scalar::from(y));
