@@ -708,6 +708,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "piston2d-graphics"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "interpolation 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "piston-texture 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "piston-viewport 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "read_color 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vecmath 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "piston2d-opengl_graphics"
 version = "0.53.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1127,7 +1139,7 @@ name = "vacuum-robot-simulator"
 version = "0.1.0"
 dependencies = [
  "piston 0.38.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "piston2d-graphics 0.26.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "piston2d-graphics 0.27.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston2d-opengl_graphics 0.53.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston_window 0.80.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pistoncore-sdl2_window 0.50.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1381,6 +1393,7 @@ dependencies = [
 "checksum piston-viewport 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8f4cef36ec5bfeff19421d0774c474c210ebc2d947daf57ed62b5867fc798f11"
 "checksum piston2d-gfx_graphics 0.51.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7f994ad8d400166aa049312c2e0b9d7efcf269b2edf9595054a87dbb5d298762"
 "checksum piston2d-graphics 0.26.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c09f6be9257a440796af745f492ec947a7c9576897da7e62cf77fc3dc3ff45e3"
+"checksum piston2d-graphics 0.27.0 (registry+https://github.com/rust-lang/crates.io-index)" = "cf4024faac74d6bd6c7ed172d5ed021be35ee18ceeb13fac1d0088f73c343a1f"
 "checksum piston2d-opengl_graphics 0.53.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e4a3a819765c46f1fb1cf0258a214bc9b5ecb1ced4277d82617b01178c73080a"
 "checksum piston_window 0.80.0 (registry+https://github.com/rust-lang/crates.io-index)" = "968fe9d1051ee04087ed3b818c9c35c57d501937c8d30fa47d2b3e89de5521a6"
 "checksum pistoncore-event_loop 0.37.0 (registry+https://github.com/rust-lang/crates.io-index)" = "f41aeb8736738607fe01981b2ed7f397d6db76383505fa62cad1fb8f1dd6c3b6"
