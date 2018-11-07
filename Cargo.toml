@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["David Peter <davidpeter@web.de>"]
 
 [dependencies]
-pistoncore-sdl2_window = "0.50.0"
+pistoncore-sdl2_window = "0.51.0"
 piston = "0.38.0"
 piston2d-graphics = "0.26.0"
 piston_window = "0.80.0"

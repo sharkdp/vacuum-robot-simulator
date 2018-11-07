@@ -791,12 +791,12 @@ dependencies = [
 
 [[package]]
 name = "pistoncore-sdl2_window"
-version = "0.50.0"
+version = "0.51.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "gl 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pistoncore-input 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pistoncore-window 0.32.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pistoncore-input 0.22.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pistoncore-window 0.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sdl2 0.31.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "shader_version 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -1130,7 +1130,7 @@ dependencies = [
  "piston2d-graphics 0.26.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston2d-opengl_graphics 0.53.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "piston_window 0.80.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pistoncore-sdl2_window 0.50.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pistoncore-sdl2_window 0.51.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "svg2polylines 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -1388,7 +1388,7 @@ dependencies = [
 "checksum pistoncore-glutin_window 0.47.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fe59c77b926016f6259920f4a91cd4fdb956ec319f472658aa000b89adda4367"
 "checksum pistoncore-input 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)" = "43baddd80b6b45b8aaa897ca952aa90397b843a9ddfbb2b4f8ce5610aaf64872"
 "checksum pistoncore-input 0.22.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5a9629c6d13c47ee7eb6815ad6965eb28579220cb27edc901979c6dcca7c3037"
-"checksum pistoncore-sdl2_window 0.50.0 (registry+https://github.com/rust-lang/crates.io-index)" = "dfdc1fdd271384a8a76eb23f2f557526917423e2badb5d2ab9e395acc0005ce4"
+"checksum pistoncore-sdl2_window 0.51.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b76232553ce27996cc84838d5c810c70de2e2164e9220d9c8aa1c4619ec4f679"
 "checksum pistoncore-window 0.32.0 (registry+https://github.com/rust-lang/crates.io-index)" = "48fdae0df38f8399c413fcf81c221d88cdb9549d7c3ef4482ce0213187038567"
 "checksum pistoncore-window 0.33.0 (registry+https://github.com/rust-lang/crates.io-index)" = "09a6e988ef1652e8ee7fa05b9cf8407030458bca07688ea2d3bf26b47b821d3a"
 "checksum pkg-config 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)" = "3a8b4c6b8165cd1a1cd4b9b120978131389f64bdaf456435caa41e630edba903"
